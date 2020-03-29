@@ -35,13 +35,11 @@ sns.set(font_scale=2)
 house_price_fixed = pd.read_csv('houseprice_cleaned.csv')
 
 # check if there is nan in the values
-# print(house_price_fixed['square'].dtype)
 # print(np.isnan(house_price_fixed['square']).describe()) # no nan values
 # print(len(house_price_fixed['square'].unique()))
 house_price_fixed['square'].astype('float64')
 
 print(house_price_fixed['livingRoom'].dtype)
-# house_price_fixed['livingRoom'].astype('float64')
 wierd = house_price_fixed.livingRoom.apply(lambda x: isinstance(x, str))
 object_livingroom = house_price_fixed[wierd]['livingRoom']
 strange =object_livingroom[object_livingroom == '#NAME?']
@@ -50,14 +48,28 @@ print(strange.shape[0])
 # remove #name?
 house_price_fixed = house_price_fixed.drop(labels=strange.index)
 print(house_price_fixed[house_price_fixed['livingRoom'] == '#NAME?'])
-house_price_fixed['livingRoom'].astype('float64')
+house_price_fixed['livingRoom'] = house_price_fixed['livingRoom'].astype('int64')
 print(house_price_fixed.shape[0]) # check if the rows are removed
 
 # change types of kitchen column
-house_price_fixed['kitchen'].astype('float64')
+house_price_fixed['kitchen']=house_price_fixed['kitchen'].astype('int64')
+house_price_fixed['square'] = house_price_fixed['square'].astype('float64')
+house_price_fixed['bathRoom'] = house_price_fixed['bathRoom'].astype('int64')
+house_price_fixed['drawingRoom'] = house_price_fixed['drawingRoom'].astype('int64')
 
-# change types of square
-house_price_fixed['square'].astype('float64')
+# remove unkonw characters before floor number
+reg_ex = re.compile(r"[^\d]+", re.IGNORECASE)
+house_price_fixed['floor'] = house_price_fixed['floor'].replace(reg_ex, '')
+print(house_price_fixed['floor'])
+house_price_fixed['floor'] = house_price_fixed['floor'].astype('int64')
+
+# some unkown data in the dataset
+house_price_fixed['constructionTime'] = house_price_fixed['constructionTime'].replace(reg_ex, '')
+no_construction_time = house_price_fixed[house_price_fixed['constructionTime'] == ''] # houses with no construction time
+house_price_fixed = house_price_fixed.drop(labels = no_construction_time.index)
+house_price_fixed['constructionTime'] = house_price_fixed['constructionTime'].astype('int64')
+print(house_price_fixed.dtypes)
 
 # write to a new file
-house_price_fixed.to_csv('houseprice_cleaned_new.csv')
+house_price_fixed.to_csv('houseprice_cleaned_final.csv')
+
