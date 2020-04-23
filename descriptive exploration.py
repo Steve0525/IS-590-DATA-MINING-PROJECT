@@ -6,10 +6,10 @@ import seaborn as sns
 
 
 # sort values
-# house_price_fixed.sort_values(by=['year','month'], ascending=True, inplace=True)
-# house_price_fixed.reset_index(drop = True, inplace=True)
+house_price_fixed.sort_values(by=['year','month'], ascending=True, inplace=True)
+house_price_fixed.reset_index(drop = True, inplace=True)
 
-# year = ['2011', '2012', '2013', '2014', '2015','2016', '2017']  # divide the data into different years
+year = ['2011', '2012', '2013', '2014', '2015','2016', '2017']  # divide the data into different years
 
 # for item in year:
 #     yeardat = house_price_fixed[house_price_fixed['year'] == item]
