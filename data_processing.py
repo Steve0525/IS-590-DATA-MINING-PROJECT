@@ -73,34 +73,36 @@ house_price_fixed = pd.read_csv('houseprice_cleaned_final_weka.csv')
 # print(house_price_fixed.dtypes)
 
 # house price range
-house_price_fixed[house_price_fixed['price'] <= 10000]
+# house_price_fixed[house_price_fixed['price'] <= 10000]
 # price_list = house_price_fixed['price'].unique
 # house_price_fixed['price'].describe()
 group = house_price_fixed.groupby('price')
 # group
-bins_a = list(range(10000, 60000, 1000))
-bins_b = list(range(60000, 150000, 5000))
+bins_a = list(range(10000, 60000, 2000))
+bins_b = list(range(60000, 150000, 10000))
 bins = bins_a + bins_b
 labels = [str(x) for x in bins]
 price_range = []
 for i in range(len(labels)-1):
     label = '{}-{}'.format(labels[i], labels[i+1])
     price_range.append(label)
-
+price_range
 house_price_fixed['priceRange'] = pd.cut(house_price_fixed['price'],bins, labels=price_range)
 house_price_fixed['priceRange']
 # write to a new file
-house_price_fixed.to_csv('houseprice_cleaned_final_weka1.csv', sep=' ', index=False)
+house_price_fixed.to_csv('houseprice_cleaned_final_weka1.csv', sep=',', index=False)
 
 house_price_fixed.sort_values(by=['year','month'], ascending=True, inplace=True)
 house_price_fixed.reset_index(drop = True, inplace=True)
+a =house_price_fixed.groupby('priceRange').count()
+
 # house_price_fixed['year']=house_price_fixed['year'].astype('object')
 
 year = ['2011', '2012', '2013', '2014', '2015','2016', '2017']  # divide the data into different years
 
 # f, ax = plt.subplots(figsize=(13, 20))
 # sns.distplot(house_price_fixed['price'], label='year')
-
+#
 # sns.distplot(house_price_fixed[house_price_fixed['year']==2011]['price'],color='pink', label='2011',hist_kws=dict(alpha=0.5))
 # sns.distplot(house_price_fixed[house_price_fixed['year']==2012]['price'],color='grey', label='2012',hist_kws=dict(alpha=0.35))
 # sns.distplot(house_price_fixed[house_price_fixed['year']==2013]['price'],color='yellow', label='2013',hist_kws=dict(alpha=0.25))
@@ -110,18 +112,18 @@ year = ['2011', '2012', '2013', '2014', '2015','2016', '2017']  # divide the dat
 # plt.show()
 
 
-# for item in year:
-#     yeardat = house_price_fixed[house_price_fixed['year'] == int(item)]
-#     # house_price_fixed['year'].dtype
-#     yeardat.reset_index(drop=True, inplace=True)
-#
-#     f, ax = plt.subplots(figsize=(13, 20))
-#     sns.jointplot(y="price", x='square', data= yeardat)
-#     plt.xlabel('square')
-#     plt.ylabel('Price')
-#     plt.title(item + ' house price box plot')
-#     f.savefig(item + '_house_price_box_plot.jpg')
-#     plt.show()
+for item in year:
+    yeardat = house_price_fixed[house_price_fixed['year'] == int(item)]
+    # house_price_fixed['year'].dtype
+    yeardat.reset_index(drop=True, inplace=True)
+
+    f, ax = plt.subplots(figsize=(13, 20))
+    sns.jointplot(y="price", x='square', data= yeardat)
+    plt.xlabel('square')
+    plt.ylabel('Price')
+    plt.title(item + ' house price box plot')
+    f.savefig(item + '_house_price_box_plot.jpg')
+    plt.show()
 
 #
 
